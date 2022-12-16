@@ -24,8 +24,8 @@ D = 5/100
 Cd = 0.47
 
 ## Inicio dos calculos
-rhoSobreRhoS = 1.1 + 0.4*((nusp1[2]+nusp2[2]+nusp3[2]+nusp4[2])/4)
-V0 = 3.0 + 0.1*((nusp1[3]+nusp2[3]+nusp3[3]+nusp4[3])/4)
+rhoSobreRhoS = 1.1 + 0.4*((nusp1[1]+nusp2[1]+nusp3[1]+nusp4[1])/4)
+V0 = 3.0 + 0.1*((nusp1[2]+nusp2[2]+nusp3[2]+nusp4[2])/4)
 alfa = -g*(rhoSobreRhoS - 1)
 beta = (-3/4)*rhoSobreRhoS*Cd/D
 
@@ -36,7 +36,7 @@ T = (-1/(beta*math.sqrt(alfa/beta)))*math.atan(V0/math.sqrt(alfa/beta))
 V = lambda t : math.sqrt(alfa/beta)*math.tan(beta*math.sqrt(alfa/beta)*t + math.atan(V0/math.sqrt(alfa/beta)))
 
 # definicao do tempo
-t = np.arange(0, 2*T, 0.01)
+t = np.arange(0, 2*T, 0.01) #comecando em t=0, indo ate t=2*T, com passo de 0.01
 
 # criando vetor de posicao
 posicao = np.zeros(len(t))
