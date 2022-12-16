@@ -29,7 +29,9 @@ V0 = 3.0 + 0.1*((nusp1[2]+nusp2[2]+nusp3[2]+nusp4[2])/4)
 alfa = -g*(rhoSobreRhoS - 1)
 beta = (-3/4)*rhoSobreRhoS*Cd/D
 
+#calculando a produndidada max alcancada pela bolinha
 h = (1/(2*beta))*math.log((alfa/beta)/(V0*V0 + alfa/beta))
+#calculando o tempo que a bolinha leva para chegar a sua profundidade max
 T = (-1/(beta*math.sqrt(alfa/beta)))*math.atan(V0/math.sqrt(alfa/beta))
 
 # calculo da velocidade em funcao de tempo
@@ -41,11 +43,17 @@ t = np.arange(0, 2*T, 0.01) #comecando em t=0, indo ate t=2*T, com passo de 0.01
 # criando vetor de posicao
 posicao = np.zeros(len(t))
 
-# definindo as posicoes ao longo do tempo
+# definindo as posicoes ao longo do tempo utilizando a formula dada no enunciado
 for i in range(0, len(t)-1):
     posicao[i] = (1/(2*beta))*math.log((V(t[i])*V(t[i]) + alfa/beta)/(V0*V0 + alfa/beta))
 
+
 # plotando a figura
+# a figura plotada demonstra a profundidade da bolinha em funcao do tempo
+# utilizando a variavel 't' e o vetor de posicoes 'posicao'
+# alem disso temos uma linha horizontal do valor da profundidade max
+# calculada na variavel 'h', como esperado, a linha horizontal
+# coincide com o valor maximo da parabola plotada
 plt.figure(figsize = (12, 8))
 plt.plot(t, posicao, 'b--', label='Solucao')
 plt.axhline(y = h, color = 'r', linestyle = '-', label='Hmax')
