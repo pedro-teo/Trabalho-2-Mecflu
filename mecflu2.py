@@ -22,6 +22,7 @@ nusp4 = [1,1,3,1,7,0,6,0]
 g = 9.8
 D = 5/100
 Cd = 0.47
+passo = 0.000001
 
 ## Inicio dos calculos
 rhoSobreRhoS = 1.1 + 0.4*((nusp1[1]+nusp2[1]+nusp3[1]+nusp4[1])/4)
@@ -29,23 +30,32 @@ V0 = 3.0 + 0.1*((nusp1[2]+nusp2[2]+nusp3[2]+nusp4[2])/4)
 alfa = -g*(rhoSobreRhoS - 1)
 beta = (-3/4)*rhoSobreRhoS*Cd/D
 
-#calculando a produndidada max alcancada pela bolinha
 h = (1/(2*beta))*math.log((alfa/beta)/(V0*V0 + alfa/beta))
-#calculando o tempo que a bolinha leva para chegar a sua profundidade max
 T = (-1/(beta*math.sqrt(alfa/beta)))*math.atan(V0/math.sqrt(alfa/beta))
 
 # calculo da velocidade em funcao de tempo
 V = lambda t : math.sqrt(alfa/beta)*math.tan(beta*math.sqrt(alfa/beta)*t + math.atan(V0/math.sqrt(alfa/beta)))
 
 # definicao do tempo
-t = np.arange(0, 2*T, 0.01) #comecando em t=0, indo ate t=2*T, com passo de 0.01
+t = np.arange(0, 2*T, passo) #comecando em t=0, indo ate t=2*T, com passo de 0.01
 
 # criando vetor de posicao
 posicao = np.zeros(len(t))
 
-# definindo as posicoes ao longo do tempo utilizando a formula dada no enunciado
+# definindo as posicoes ao longo do tempo para o metodo numerico
 for i in range(0, len(t)-1):
     posicao[i] = (1/(2*beta))*math.log((V(t[i])*V(t[i]) + alfa/beta)/(V0*V0 + alfa/beta))
+
+
+#criando as variaveis para a solucao diferencial
+posicaoDif = np.zeros(len(t))
+velocidade = np.zeros(len(t))
+velocidade[0] = V0
+
+# metodo das eq diferenciais
+for i in range (0, len(t)-1):
+    posicaoDif[i+1] = passo*velocidade[i] + posicaoDif[i]
+    velocidade[i+1] = passo*(alfa + beta*abs(velocidade[i])*velocidade[i]) + velocidade[i]
 
 
 # plotando a figura
@@ -55,7 +65,8 @@ for i in range(0, len(t)-1):
 # calculada na variavel 'h', como esperado, a linha horizontal
 # coincide com o valor maximo da parabola plotada
 plt.figure(figsize = (12, 8))
-plt.plot(t, posicao, 'b--', label='Solucao')
+plt.plot(t, posicao, 'b--', label='Solucao Analitica')
+plt.plot(t, posicaoDif, 'g--', label='Solucao numerica')
 plt.axhline(y = h, color = 'r', linestyle = '-', label='Hmax')
 plt.title('Profundidade da bolinha em funcao do tempo')
 plt.xlabel('t')
